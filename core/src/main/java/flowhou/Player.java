@@ -14,15 +14,17 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player extends Entity {
-	private static int MAX_BULLET_SOURCES = 8;
-	private Stats stats = new Stats();
-	private ArrayList<BulletSource> bulletSources = new ArrayList<BulletSource>();
-	
-	public Player(Texture spriteTexture) {
-		setPosition(new Vector2(0,0));
-		setSprite(new Sprite(spriteTexture, 64, 64));
-	}
+public class Player extends Entity implements Collidable {
+    private static int MAX_BULLET_SOURCES = 8;
+    private Stats stats = new Stats();
+    private ArrayList<BulletSource> bulletSources = new ArrayList<BulletSource>();
+    private boolean active = true;
+
+    public Player(Texture spriteTexture) {
+        setPosition(new Vector2(0,0));
+        setSprite(new Sprite(spriteTexture, 64, 64));
+        this.hitbox.setSize(64, 64);
+    }
 	
 	// Public methods
 	public void setup() {
@@ -90,5 +92,24 @@ public class Player extends Entity {
 				bulletSource.evoke();
 			}
 		}
+		
 	}
-}
+	 @Override
+	    public Rectangle getCollisionBox() {
+	        hitbox.setPosition(position.x, position.y);
+	        return hitbox;
+	    }
+
+	    @Override
+	    public void onCollision(Collidable other) {
+	        if (other instanceof Enemy) {
+	            takeDamage();
+	        }
+	    }
+
+	    @Override
+	    public boolean isActive() {
+	        return active;
+	    }
+
+	}

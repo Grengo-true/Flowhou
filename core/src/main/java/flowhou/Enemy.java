@@ -1,5 +1,6 @@
 package flowhou;
 
-public class Enemy {
-	
+public class Enemy extends Entity{
+	public Enemy(){
+	}
 }

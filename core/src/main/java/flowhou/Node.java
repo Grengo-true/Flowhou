@@ -1,6 +1,7 @@
 package flowhou;
 
 import java.util.ArrayList;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class Node {
@@ -8,12 +9,13 @@ public class Node {
 	protected Vector2 globalPosition = new Vector2();
 	protected Node parent = null;
 	protected ArrayList<Node> children = new ArrayList<>();
+	protected float lastDelta = 0.0f;
 	
 	public Node() {
 	}
 	
 	public void process(float delta) {
-		
+		lastDelta = delta;
 	}
 	
 	public Vector2 getPosition() {
@@ -24,8 +26,8 @@ public class Node {
 		return this.globalPosition.cpy();
 	}
 	
-	public Vector2 getPositionFrom(Vector2 pointOfReference) {
-		return getGlobalPosition().sub(pointOfReference);
+	public Vector2 getPositionFrom(Node targetNode) {
+		return getGlobalPosition().sub(targetNode.getPosition());
 	}
 	
 	public void setPosition(Vector2 newPosition) {
@@ -34,8 +36,8 @@ public class Node {
 		updateChildrenGlobalPositions();
 	}
 	
-	public void setPosition(float x, float y) {
-		this.position.set(x, y);
+	public void setPosition(float newX, float newY) {
+		this.position.set(newX, newY);
 		updateGlobalPosition();
 		updateChildrenGlobalPositions();
 	}
@@ -109,4 +111,5 @@ public class Node {
 			child.updateChildrenGlobalPositions();
 		}
 	}
+	
 }

@@ -6,27 +6,35 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 
-public class BulletSource {
-	static final private float SPEED_CONST = 350.0f;
-	private Vector2 position = new Vector2();
-	private Vector2 bulletMovementInput = new Vector2();
-	private float bulletSpeed = 0.0f;
-	
+public class BulletSource extends Node{
+	private boolean cooldownStatus = true;
+	private Timer cooldownTimer;
 	
 	public BulletSource(){
-		
+		cooldownTimer = new Timer();
 	}
 	
 	public void setUp() {
 		
 	}
-	
-	public void process(float delta, SpriteBatch batch) {
+	public void evoke() {
+		this.cooldownStatus = true;
 	}
 	
-	public void setPosition(Vector2 newPosition) {
-		this.position = newPosition;
+	public void process(float delta) {
 	}
 	
+	public boolean isReady() {
+		return !this.cooldownStatus;
+	}
+	
+	public void setCooldownStatus(boolean newOnCooldown) {
+		this.cooldownStatus = newOnCooldown;
+	}
+	
+	public boolean getCooldownStatus() {
+		return this.cooldownStatus;
+	}
 }

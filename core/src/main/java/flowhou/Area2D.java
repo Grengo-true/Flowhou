@@ -3,7 +3,7 @@ package flowhou;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Area2D extends Node2D {
-    private Rectangle hitbox = new Rectangle();
+    private Rectangle detectionArea = new Rectangle();
     
     public Area2D() {
         super();
@@ -11,19 +11,15 @@ public class Area2D extends Node2D {
     
     public Area2D(float width, float height) {
         super();
-        this.hitbox.setSize(width, height);
+        this.detectionArea.setSize(width, height);
     }
     
     public void setHitboxSize(float width, float height) {
-        this.hitbox.setSize(width, height);
+        this.detectionArea.setSize(width, height);
     }
     
     public Rectangle getHitbox() {
-        hitbox.setPosition(
-            globalPosition.x - hitbox.width / 2.0f, 
-            globalPosition.y - hitbox.height / 2.0f
-        );
-        return this.hitbox;
+        return this.detectionArea;
     }
     
     public boolean isColliding(Area2D other) {
@@ -41,6 +37,9 @@ public class Area2D extends Node2D {
     @Override
     public void process(float delta) {
         super.process(delta);
-        getHitbox();
+        detectionArea.setPosition(
+            globalPosition.x - detectionArea.width / 2.0f, 
+            globalPosition.y - detectionArea.height / 2.0f
+        );
     }
 }

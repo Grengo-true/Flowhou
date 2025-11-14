@@ -5,30 +5,22 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 
-public class Enemy extends Entity implements Collidable {
-    private AIController ai;
-    private int health;
+public class Enemy extends Character implements Collidable {
+    private AIController aiController;
     private boolean active;
     
-    public Enemy(Texture texture, AIController aiController) {
+    public Enemy(Texture texture) {
         this.sprite = new Sprite(texture);
-        this.ai = aiController;
-        this.health = 100;
+        this.aiController = new AIController(this, null);
         this.active = true;
-        addChild(ai);
     }
     
     @Override
     public void process(float delta) {
         super.process(delta);
-        if (ai != null && active) {
-            ai.process(delta);
+        if (aiController != null && active) {
+        	setMovementInput(aiController.getTargetDirection());
         }
-    }
-    
-    @Override
-    public Rectangle getCollisionBox() {
-        return hitbox;
     }
     
     @Override
@@ -44,21 +36,16 @@ public class Enemy extends Entity implements Collidable {
     }
     
     public void takeDamage(int damage) {
-        health -= damage;
-        if (health <= 0) {
-            die();
-        }
     }
     
     public void die() {
         active = false;
     }
     
-    public void setAI(AIController newAI) {
-        if (this.ai != null) {
-            removeChild(this.ai);
-        }
-        this.ai = newAI;
-        addChild(newAI);
+    public void setAIController(AIController newAIController) {
+        this.aiController = newAIController;
+    }
+    public AIController getAIControler() {
+    	return this.aiController;
     }
 }

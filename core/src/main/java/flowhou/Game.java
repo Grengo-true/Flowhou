@@ -39,5 +39,7 @@ public class Game extends Node2D {
 		super.draw(spriteBatch);
 		spriteBatch.setProjectionMatrix(camera.combined);
 	}
-	
+	public void update(float delta) {
+	    super.update(delta);
+	}
 }

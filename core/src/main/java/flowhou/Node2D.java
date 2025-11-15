@@ -132,4 +132,9 @@ public class Node2D {
         position.set(0, 0);
         globalPosition.set(0, 0);
     }
+    
+ // Alias requerido por GameScreen
+    public void update(float delta) {
+        process(delta);
+    }
 }

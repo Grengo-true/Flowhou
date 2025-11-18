@@ -12,14 +12,15 @@ public class Game extends Node2D {
 	private OrthographicCamera camera;
 	
 	public Game() {
+		super(new Vector2(0,0));
 		Music rainMusic = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 		rainMusic.setVolume(0.0f);
 		camera = new OrthographicCamera();
         camera.setToOrtho(false, 1024, 576);
         camera.update();
         
-        addChild(new Player( new Texture(Gdx.files.internal("ameIdle.png")), new Vector2(64,64)));
-        addChild(new Enemy(new Texture(Gdx.files.internal("thronglerIdle.png"))));  
+        addChild(new Player(new Vector2(64,64), new Texture(Gdx.files.internal("ameIdle.png"))));
+        addChild(new Enemy(new Vector2(128,128) , new Texture(Gdx.files.internal("thronglerIdle.png"))));  
         
 	}
 	

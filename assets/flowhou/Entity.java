@@ -8,18 +8,26 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class Entity extends Node2D {
     protected static final float SPEED_CONST = 350.0f;
-    protected float speedMultiplier = 1.0f;
-    protected Vector2 movementInput = new Vector2();
-    protected Vector2 velocity = new Vector2();
+    protected float speedMultiplier;
+    protected Vector2 movementInput;
+    protected Vector2 velocity = new Vector2(0,0);
     protected Sprite sprite;
-    protected Rectangle collisionBox = new Rectangle();
+    protected Area2D hurtbox;
+    protected boolean active;
     
-    public Entity() {
+    public Entity(Vector2 newPosition, Texture newTexture) {
+    	super(newPosition);
+    	setSprite(new Sprite(newTexture));
+    	setVelocity(new Vector2(0,0));
+    	setSpeedMultiplier(1.0f);
+    	setActive(true);
+    	setHurtbox(new Area2D(Vector2.Zero, 16, 1, 1));
+    	
     }
     
     @Override
     public void process(float delta) {
-        super.process(delta); // Process children first
+        super.process(delta);
         updateVelocity();
         setPosition(getPosition().add(getVelocity().scl(delta)));
     }
@@ -100,14 +108,20 @@ public abstract class Entity extends Node2D {
         this.sprite.setTexture(newTexture);
     }
     
-    public Rectangle getCollisionBox() {
-        // Update hitbox position before returning
-    	collisionBox.setPosition(position.x, position.y);
-        return collisionBox;
+    public Area2D getHurtbox() {
+        return this.hurtbox;
     }
     
-    public void setCollisionBox(Rectangle newHitbox) {
-        this.collisionBox = newHitbox;
+    public void setHurtbox(Area2D newHurtbox) {
+        this.hurtbox = newHurtbox;
+    }
+    
+    public boolean isActive() {
+    	return this.active;
+    }
+    
+    public void setActive(boolean newActive) {
+    	this.active = newActive;
     }
     
     @Override

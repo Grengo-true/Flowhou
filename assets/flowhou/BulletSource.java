@@ -17,7 +17,8 @@ public class BulletSource extends Node2D{
 	private Timer cooldownTimer;
 	private Character caster;
 	
-	public BulletSource(Character newCaster,  float newCooldownSeconds){
+	public BulletSource( Vector2 newPosition, Character newCaster,  float newCooldownSeconds){
+		super(newPosition);
 		this.caster = newCaster;
 		cooldownTimer = new Timer();
 		cooldownStatus = false;
@@ -29,7 +30,7 @@ public class BulletSource extends Node2D{
 	}
 	public void evoke() {
 		this.cooldownStatus = true;
-		Bullet newBullet = new Bullet(this.globalPosition , new Vector2(0,1), 3.0f, 2.0f);
+		Bullet newBullet = new Bullet(this.globalPosition, new Texture(Gdx.files.internal("bubble8x.png")), new Vector2(0,1), 3.0f, 2.0f);
 		startCooldownTimer();
 	}
 	

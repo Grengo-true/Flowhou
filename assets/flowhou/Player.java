@@ -10,29 +10,18 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Character implements Collidable {
-    private Stats stats = new Stats();
-    private boolean active = true;
-
-    public Player(Texture spriteTexture, Vector2 position) {
-        setPosition(position);
-        this.sprite = new Sprite(spriteTexture);
+    
+    public Player(Vector2 newPosition, Texture spriteTexture) {
+        super(newPosition, spriteTexture);
         this.sprite.setOriginCenter();               
         this.sprite.setPosition(sprite.getWidth()/2.0f, sprite.getHeight()/2.0f);
-        this.collisionBox.setSize(64, 64);
-        this.collisionBox.setPosition(-32, -32);
         setupBulletSources();
     }
     
     @Override
     public void setupBulletSources() {
         for (int i = 0; i < MAX_BULLET_SOURCES; i++) {
-            BulletSource newBulletSource = new BulletSource(this, 0.1f);
-            if (i == 0) {
-                newBulletSource.setPosition(new Vector2(sprite.getWidth()/2.0f, 0));
-            } else {
-                newBulletSource.setPosition(new Vector2(-sprite.getWidth()/2.0f, 0));
-            }
-            
+            BulletSource newBulletSource = new BulletSource(new Vector2(50 * (((i + 1) % 2 == 0) ? -1 : 1) ,10) ,this, 0.1f);
             addBulletSource(newBulletSource);
         }
     }
@@ -46,21 +35,21 @@ public class Player extends Character implements Collidable {
         Vector2 newInput = new Vector2();
         
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            newInput.x = -1;
+            newInput.x += -1;
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             newInput.x += 1;
         }
         
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            newInput.y = -1;
+            newInput.y += -1;
         }
-        else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             newInput.y += 1;
         }
         
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            setSpeedMultiplier(0.5f);
+            setSpeedMultiplier(0.7f);
         }
         else {
             setSpeedMultiplier(1.0f);
@@ -74,10 +63,6 @@ public class Player extends Character implements Collidable {
     
     public void takeDamage() {
     }
-    
-    public Stats getStats() {
-        return stats;
-    }
 
     @Override
     public void onCollision(Collidable other) {
@@ -90,4 +75,6 @@ public class Player extends Character implements Collidable {
     public boolean isActive() {
         return active;
     }
+    
+    
 }

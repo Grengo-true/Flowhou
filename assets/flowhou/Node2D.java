@@ -11,7 +11,8 @@ public class Node2D {
     protected ArrayList<Node2D> children = new ArrayList<>();
     protected float lastDelta = 0.0f;
     
-    public Node2D() {
+    public Node2D(Vector2 newPosition) {
+    	setPosition(newPosition);
     }
     
     public void process(float delta) {

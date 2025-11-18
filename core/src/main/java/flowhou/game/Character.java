@@ -1,16 +1,20 @@
-package flowhou;
+package flowhou.game;
 
 import java.util.ArrayList;
+
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public class Character extends Entity {
     protected static int MAX_BULLET_SOURCES = 2;
     protected ArrayList<BulletSource> bulletSources;
     protected Stats stats;
     
-    public Character() {
-        this.bulletSources = new ArrayList<BulletSource>();
-        this.stats = new Stats();
+    public Character(Vector2 newPosition, Texture newTexture) {
+    	super(newPosition, newTexture);
+        setBulletSources(new ArrayList<BulletSource>());
+        setStats(new Stats());
     }
     
     public void setupBulletSources() {
@@ -71,4 +75,5 @@ public class Character extends Entity {
         
         super.dispose();
     }
+    
 }

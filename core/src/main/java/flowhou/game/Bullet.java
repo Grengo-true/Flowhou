@@ -13,16 +13,20 @@ public class Bullet extends Entity{
 	private Area2D hitbox;
 	
 	public Bullet(Vector2 newPosition, Texture newTexture, Vector2 newMovementInput, float newSpeedMultiplier, float newLifetime){
-		super(newPosition, newTexture);
-		
-		setMovementInput(newMovementInput);
-		setSpeedMultiplier(newSpeedMultiplier);
-		setLifeTime(newLifetime);
-		
-		this.hitbox = new Area2D(Vector2.Zero, 4, 1);
-		FlowhouGame game = (FlowhouGame) Gdx.app.getApplicationListener();
-		game.getGameInstance().addChild(this);
-		
+	    super(newPosition, newTexture);
+	    
+	    setMovementInput(newMovementInput);
+	    setSpeedMultiplier(newSpeedMultiplier);
+	    setLifeTime(newLifetime);
+	    
+	    this.hitbox = new Area2D(Vector2.Zero, 4, 1);
+	    
+	    this.hitbox.enableCircleCollision(8f); // radio
+	    
+	    addChild(this.hitbox);
+	    
+	    FlowhouGame game = (FlowhouGame) Gdx.app.getApplicationListener();
+	    game.getGameInstance().addChild(this);
 	}
 	
 	public void process(float delta) {

@@ -91,12 +91,13 @@ public class Enemy extends Character{
     }
     @Override
     public void onCollision(Node2D other) {
-        super.onCollision(other);        
-        if (other instanceof Bullet) {
-            Bullet bullet = (Bullet) other;
-            if (bullet.getHitBox().getCollisionLayer() == 4) {
-                takeDamage(10); 
-                bullet.dispose(); 
+        super.onCollision(other);
+        if (other instanceof Area2D) {
+            Area2D area = (Area2D) other;           
+            if (area.getParent() instanceof Bullet) {
+                Bullet bullet = (Bullet) area.getParent();
+                takeDamage(10);
+                bullet.dispose();
             }
         }
     }

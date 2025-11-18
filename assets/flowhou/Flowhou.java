@@ -1,60 +1,46 @@
 package flowhou;
 
-
-import java.util.ArrayList;
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
+/**
+ * Clase principal del juego Flowhou.
+ * Ahora extiende Game para soportar pantallas (Screen).
+ */
+public class Flowhou extends Game {
 
+    public SpriteBatch gameBatch;
+    public SpriteBatch uiBatch;
+    public BitmapFont font;
 
-public class Flowhou extends ApplicationAdapter {
-    
-    private SpriteBatch gameBatch;
-    private SpriteBatch uiBatch;
-    private BitmapFont font;
-    private Game game;
-    private ArrayList<Collidable> collidables = new ArrayList<Collidable>(); 
-    private float currentDelta = 0.0f;
+    @Override
+    public void create() {
 
-    public void create () {
-        font = new BitmapFont();
-        
-        
-        game = new Game();
-        Game.setInstance(game);
-        
-        
+        // Batches compartidos para todas las pantallas
         gameBatch = new SpriteBatch();
         uiBatch = new SpriteBatch();
-    }
-    @Override
-    public void render () {
-    	currentDelta = Gdx.graphics.getDeltaTime();
-        
-        ScreenUtils.clear(0, 0, 0.2f, 1);
-        
-        
-        gameBatch.begin();
-        
-        game.process(currentDelta);
-        game.draw(gameBatch);
-        
-        gameBatch.end();
+
+        font = new BitmapFont();
+
+        // Mostrar el menú principal al iniciar
+        setScreen(new MainMenuScreen(this));
     }
 
     @Override
-    public void dispose () {
-    	game.dispose();
-        gameBatch.dispose();
-        uiBatch.dispose();
-        font.dispose();
+    public void render() {
+        // Se asegura de llamar al render() de la pantalla activa
+        super.render();
+    }
+
+    @Override
+    public void dispose() {
+        // Disponer recursos compartidos
+        if (gameBatch != null) gameBatch.dispose();
+        if (uiBatch != null) uiBatch.dispose();
+        if (font != null) font.dispose();
+
+        // También dispose de la pantalla actual
+        if (getScreen() != null) getScreen().dispose();
     }
 }

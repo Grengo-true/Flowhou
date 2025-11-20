@@ -11,10 +11,10 @@ public class Character extends Entity {
     protected ArrayList<BulletSource> bulletSources;
     protected Stats stats;
     
-    public Character(Vector2 newPosition, Texture newTexture) {
-    	super(newPosition, newTexture);
+    public Character(Vector2 newPosition, Texture newTexture, Stats newStats, float newHurtboxRadius) {
+    	super(newPosition, newTexture, newHurtboxRadius);
+    	setStats(newStats);
         setBulletSources(new ArrayList<BulletSource>());
-        setStats(new Stats());
     }
     
     public void setupBulletSources() {

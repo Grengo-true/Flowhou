@@ -19,8 +19,8 @@ public class Pickup extends Entity{
     private Type type;
     
     
-    public Pickup(Vector2 newPosition, Texture newTexture , Type type) {
-    	super(newPosition, newTexture);
+    public Pickup(Vector2 newPosition, Texture newTexture , Type type, float radius) {
+    	super(newPosition, newTexture, radius);
         setType(type);
         this.active = true;
         this.hitbox.setSize(32, 32);

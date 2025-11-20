@@ -11,8 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Character{
     
-    public Player(Vector2 newPosition, Texture spriteTexture) {
-        super(newPosition, spriteTexture);
+    public Player(Vector2 newPosition, Texture newSpriteTexture, Stats newStats, float newHurtboxRadius) {
+        super(newPosition, newSpriteTexture, newStats, newHurtboxRadius);
         this.sprite.setOriginCenter();               
         this.sprite.setPosition(sprite.getWidth()/2.0f, sprite.getHeight()/2.0f);
         setupBulletSources();
@@ -65,13 +65,7 @@ public class Player extends Character{
     }
 
     @Override
-    public void onCollision(Node2D other) {
-        if (other instanceof Enemy) {
-            takeDamage();
-        } else if (other instanceof Bullet) {
-            Bullet bullet = (Bullet) other;
-            takeDamage();
-        }
+    public void onCollision(Area2D other) {
     }
 
     @Override

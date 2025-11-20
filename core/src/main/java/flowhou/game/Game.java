@@ -19,9 +19,11 @@ public class Game extends Node2D {
         camera.setToOrtho(false, 1024, 576);
         camera.update();
         
-        addChild(new Player(new Vector2(64,64), new Texture(Gdx.files.internal("ameIdle.png"))));
+        addChild(new Ame(new Vector2(64,64)));
         
-        addChild(new Enemy(new Vector2(128,128), new Texture(Gdx.files.internal("thronglerIdle.png")),10));
+        addChild(new Throngler(new Vector2(128,128)));
+        addChild(new Throngler(new Vector2(523,555)));
+        addChild(new Throngler(new Vector2(444,444)));
     }
     
     @Override

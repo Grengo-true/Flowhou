@@ -14,21 +14,16 @@ public abstract class Entity extends Node2D {
     protected Area2D hurtbox;
     protected boolean active;
     
-    public Entity(Vector2 newPosition, Texture newTexture) {
+    public Entity(Vector2 newPosition, Texture newTexture, float newHurtboxRadius) {
         super(newPosition);
         setSprite(new Sprite(newTexture));
         setVelocity(new Vector2(0,0));
         setSpeedMultiplier(1.0f);
         setActive(true);
         
-        // Create hurtbox with Box2D - no size parameter, just collision layers
-        setHurtbox(new Area2D(Vector2.Zero, 1, 2)); // Layer 1, collides with layer 2
-        
-        // Enable collision for the hurtbox
-        getHurtbox().enableCircleCollision(16f); // 16 pixel radius collision
-        
-        // Add hurtbox as child so it moves with the entity
+        setHurtbox(new Area2D(Vector2.Zero,  1, 2));
         addChild(getHurtbox());
+        getHurtbox().enableCircleCollision(newHurtboxRadius);
     }
     
     @Override
@@ -130,9 +125,7 @@ public abstract class Entity extends Node2D {
         this.active = newActive;
     }
     
-    // Override this in subclasses to handle collisions
-    public void onCollision(Node2D other) {
-        System.out.println(this.getClass().getSimpleName() + " collided with " + other.getClass().getSimpleName());
+    public void onCollision(Area2D other) {
     }
     
     @Override

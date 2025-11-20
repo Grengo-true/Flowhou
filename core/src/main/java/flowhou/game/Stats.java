@@ -1,11 +1,27 @@
 package flowhou.game;
 
 public class Stats {
-	protected static final int MIN_LIVES = 0;
-	
+	protected int minLives;
+	protected int maxLives;
 	protected int lives;
 	protected int storm;
 	protected int power;
+	
+	public Stats(int newMinLives, int newMaxLives, int newLives, int newStorm, int newPower) {
+		setMinLives(newMinLives);
+		setMaxLives(newMaxLives);
+		setLives(newLives);
+		setStorm(newStorm);
+		setPower(newPower);
+	}
+	
+	public int getMinLives() {
+		return this.minLives;
+	}
+	
+	public int getMaxLives() {
+		return this.maxLives;
+	}
 	
 	public int getLives() {
 		return this.lives;
@@ -16,8 +32,20 @@ public class Stats {
 	public int getPower() {
 		return this.power;
 	}
+	
+	public void setMinLives(int newMinLives) {
+		this.minLives = newMinLives;
+		clampLives();
+	}
+	
+	public void setMaxLives(int newMaxLives) {
+		this.minLives = newMaxLives;
+		clampLives();
+	}
+	
 	public void setLives(int newLives) {
 		this.lives = newLives;
+		clampLives();
 	}
 	public void setStorm(int newStorm) {
 		this.storm = newStorm;
@@ -26,7 +54,11 @@ public class Stats {
 		this.power = newPower;
 	}
 	
-	public boolean shoudlDie() {
-		return (this.lives == MIN_LIVES);
+	public boolean shouldDie() {
+		return (this.lives <= this.minLives);
+	}
+	
+	private void clampLives() {
+		this.lives = Math.max( Math.min(this.minLives, this.lives), this.maxLives );
 	}
 }

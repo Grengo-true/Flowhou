@@ -29,8 +29,8 @@ public class BulletSource extends Node2D{
 		
 	}
 	public void evoke() {
-		this.cooldownStatus = true;
-		Bullet newBullet = new Bubble(getGlobalPosition() , Vector2.Y);
+		Bullet newBullet = new Bullet(getGlobalPosition() , Vector2.Y, Bullet.TYPE.BUBBLE);
+		FlowhouGame.getGameInstance().addChild(newBullet);
 		startCooldownTimer();
 	}
 	
@@ -58,6 +58,7 @@ public class BulletSource extends Node2D{
 	}
 	
 	public void startCooldownTimer() {
+		setCooldownStatus(true);
 		Task newtimerTask = new Task() {
 			public void run() {
 				setCooldownStatus(false);

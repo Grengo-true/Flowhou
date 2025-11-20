@@ -14,16 +14,13 @@ public abstract class Entity extends Node2D {
     protected Area2D hurtbox;
     protected boolean active;
     
-    public Entity(Vector2 newPosition, Texture newTexture, float newHurtboxRadius) {
+    public Entity(Vector2 newPosition) {
         super(newPosition);
-        setSprite(new Sprite(newTexture));
         setVelocity(new Vector2(0,0));
-        setSpeedMultiplier(1.0f);
-        setActive(true);
-        
+        setSprite(new Sprite());
         setHurtbox(new Area2D(Vector2.Zero,  1, 2));
         addChild(getHurtbox());
-        getHurtbox().enableCircleCollision(newHurtboxRadius);
+        setActive(true);
     }
     
     @Override
@@ -102,11 +99,13 @@ public abstract class Entity extends Node2D {
     
     public void setSprite(Sprite newSprite) {
         this.sprite = newSprite;
+        this.sprite.setPosition(sprite.getWidth()/2.0f, sprite.getHeight()/2.0f);
+        this.sprite.setOriginCenter();    
     }
     
     public void setTexture(Texture newTexture) {
         if (newTexture == null) return;
-        this.sprite.setTexture(newTexture);
+        setSprite(new Sprite(newTexture));
     }
     
     public Area2D getHurtbox() {
@@ -128,6 +127,7 @@ public abstract class Entity extends Node2D {
     public void onCollision(Area2D other) {
     }
     
+    
     @Override
     public void dispose() {
         // Clean up resources if needed
@@ -135,6 +135,7 @@ public abstract class Entity extends Node2D {
             // Note: Don't dispose the texture here unless you created it
             sprite = null;
         }
+        
         super.dispose();
     }
 }

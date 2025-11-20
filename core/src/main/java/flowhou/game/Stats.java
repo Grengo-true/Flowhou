@@ -7,12 +7,12 @@ public class Stats {
 	protected int storm;
 	protected int power;
 	
-	public Stats(int newMinLives, int newMaxLives, int newLives, int newStorm, int newPower) {
-		setMinLives(newMinLives);
-		setMaxLives(newMaxLives);
-		setLives(newLives);
-		setStorm(newStorm);
-		setPower(newPower);
+	public Stats() {
+		setMinLives(0);
+		setMaxLives(0);
+		setLives(0);
+		setStorm(0);
+		setPower(0);
 	}
 	
 	public int getMinLives() {
@@ -59,6 +59,6 @@ public class Stats {
 	}
 	
 	private void clampLives() {
-		this.lives = Math.max( Math.min(this.minLives, this.lives), this.maxLives );
+		this.lives = Math.max( Math.min(this.maxLives, this.lives), this.minLives );
 	}
 }

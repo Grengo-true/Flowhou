@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class FlowhouGame extends ApplicationAdapter {
+public final class FlowhouGame extends ApplicationAdapter {
     private SpriteBatch gameBatch;
-    private Game gameInstance;
+    private static Game gameInstance;
     private float delta;
     private PhysicsManager physicsManager;
     
@@ -41,8 +41,8 @@ public class FlowhouGame extends ApplicationAdapter {
     	physicsManager.dispose();
     }
     
-    public Game getGameInstance() {
-    	return this.gameInstance;
+    public static Game getGameInstance() {
+    	return gameInstance;
     }
     
     public float getDelta() {
@@ -56,4 +56,5 @@ public class FlowhouGame extends ApplicationAdapter {
     public PhysicsManager getPhysicsManager() {
     	return this.physicsManager;
     }
+    
 }

@@ -11,13 +11,17 @@ public class Bullet extends Entity{
 	private float lifetime;
 	private float totalDelta = 0.0f;
 	
-	public Bullet(Vector2 newPosition, Texture newTexture, float newHurtboxRadius, Vector2 newMovementInput, float newSpeedMultiplier, float newLifetime){
-	    super(newPosition, newTexture, newHurtboxRadius);
+	enum TYPE{
+		BUBBLE
+	}
+	
+	public Bullet(Vector2 newPosition, Vector2 newMovementInput, TYPE newType){
+	    super(newPosition);
+		setType(newType);
 	    setMovementInput(newMovementInput);
-	    setSpeedMultiplier(newSpeedMultiplier);
-	    setLifeTime(newLifetime);
 	    FlowhouGame game = (FlowhouGame) Gdx.app.getApplicationListener();
 	    game.getGameInstance().addChild(this);
+	    
 	}
 	
 	public void process(float delta) {
@@ -40,6 +44,16 @@ public class Bullet extends Entity{
 	
 	public float getLifeTime(float newLifetime) {
 		return this.lifetime;
+	}
+	
+	public void setType(TYPE newType) {
+		switch(newType) {
+			case BUBBLE:
+				getHurtbox().enableCircleCollision(0.2f);
+				setTexture(new Texture(Gdx.files.internal("bubble8x.png")));
+				setSpeedMultiplier(5.0f);
+				setLifeTime(2.5f);
+		}
 	}
 	
 }

@@ -1,101 +1,108 @@
 package flowhou.game;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import java.util.ArrayList;
 
-public class EnemySpawner extends Node2D {
-    private Class<? extends Enemy> enemyClass;
+public class EnemySpawner extends Node2D implements Character.CharacterListener {
+    private static final int MIN_QUEUE = 0;
+    private static final int MAX_QUEUE = 100;
+    
+    private boolean cooldownStatus;
+    private Enemy.TYPE enemyType;
+    protected int queue;
+    private float cooldownSeconds; 
+    private Timer cooldownTimer;
     private ArrayList<Enemy> spawnedEnemies;
     
-    // Bullet pattern placeholder
-    private Object bulletPattern; // TODO: Replace with BulletPattern class when implemented
-    
-    public EnemySpawner(Vector2 newPosition, Class<? extends Enemy> enemyClass) {
+    public EnemySpawner(Vector2 newPosition, Enemy.TYPE newEnemyType, int newQueue, float newCooldownSeconds) {
         super(newPosition);
-        this.enemyClass = enemyClass;
-        this.spawnedEnemies = new ArrayList<>();
-        this.bulletPattern = null;
+        this.cooldownTimer = new Timer();
+        this.spawnedEnemies = new ArrayList<Enemy>();
+        this.cooldownStatus = false;
+        this.enemyType = newEnemyType;
+        this.queue = Math.max(Math.min(newQueue, MAX_QUEUE), MIN_QUEUE);
+        this.cooldownSeconds = newCooldownSeconds;
+        
+        // Start spawning if possible
+        if (canSpawn()) {
+            spawnEnemy();
+        }
     }
     
-    // Spawn a single enemy at spawner's position
-    public Enemy spawnEnemy() {
-        return spawnEnemyAt(getGlobalPosition());
+    public void spawnEnemy() {
+        if (!canSpawn()) return;
+        
+        spawnEnemyAt(getGlobalPosition());
+        queue--; // Decrease queue count
+        startCooldownTimer();
     }
     
-    // Spawn enemy at specific position
-    public Enemy spawnEnemyAt(Vector2 spawnPos) {
+    public void spawnEnemyAt(Vector2 spawnPos) {
         try {
-            Enemy newEnemy = enemyClass.getConstructor(Vector2.class).newInstance(spawnPos);
-            // Add to game scene
-            if (parent != null) {
-                parent.addChild(newEnemy);
-            }
+            Enemy newEnemy = new Enemy(spawnPos, enemyType, 1);
             
+            // Add death listener to the enemy
+            newEnemy.addCharacterListener(this);
+            
+            // Add to game
+            FlowhouGame.getGameInstance().addChild(newEnemy);
             spawnedEnemies.add(newEnemy);
-            return newEnemy;
             
         } catch (Exception e) {
             System.err.println("Failed to spawn enemy: " + e.getMessage());
-            e.printStackTrace();
-            return null;
         }
     }
-    
-    // Spawn enemy at offset from spawner's position
-    public Enemy spawnEnemyAtOffset(Vector2 offset) {
-        Vector2 spawnPos = getGlobalPosition().add(offset);
-        return spawnEnemyAt(spawnPos);
-    }
-    
-    // Spawn multiple enemies at specific positions
-    public ArrayList<Enemy> spawnWaveAtPositions(Vector2[] positions) {
-        ArrayList<Enemy> wave = new ArrayList<>();
-        for (Vector2 pos : positions) {
-            Enemy enemy = spawnEnemyAt(pos);
-            if (enemy != null) {
-                wave.add(enemy);
-            }
-        }
-        return wave;
-    }
-    
-    // Spawn multiple enemies at offsets from spawner
-    public ArrayList<Enemy> spawnWaveAtOffsets(Vector2[] offsets) {
-        ArrayList<Enemy> wave = new ArrayList<>();
-        for (Vector2 offset : offsets) {
-            Enemy enemy = spawnEnemyAtOffset(offset);
-            if (enemy != null) {
-                wave.add(enemy);
-            }
-        }
-        return wave;
-    }
-    
+
     @Override
     public void process(float delta) {
         super.process(delta);
         
-        // Clean up dead enemies from tracking list
+        // Auto-spawn while conditions are met
+        if (canSpawn()) {
+            spawnEnemy();
+        }
+        
+        // Clean up dead enemies
         spawnedEnemies.removeIf(enemy -> !enemy.isActive());
     }
     
     @Override
-    protected void dispose() {
+    public void onCharacterDied(Character character) {
+        if (character instanceof Enemy) {
+            Enemy enemy = (Enemy) character;
+            // Remove the enemy when it dies
+            spawnedEnemies.remove(enemy);
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        // Remove listeners from all enemies
+        for (Enemy enemy : spawnedEnemies) {
+            enemy.removeCharacterListener(this);
+        }
         spawnedEnemies.clear();
         super.dispose();
     }
     
-    // Getters and setters
-    
-    public void setBulletPattern(Object pattern) {
-        // TODO: Change parameter type to BulletPattern when implemented
-        this.bulletPattern = pattern;
+    public boolean canSpawn() {
+        return (queue >= 1 && !cooldownStatus);
     }
     
-    public Object getBulletPattern() {
-        return bulletPattern;
+    private void startCooldownTimer() {
+        cooldownStatus = true;
+        Task timerTask = new Task() {
+            @Override
+            public void run() {
+                cooldownStatus = false;
+            }
+        };
+        cooldownTimer.scheduleTask(timerTask, cooldownSeconds);
     }
     
+    // Basic getters
     public ArrayList<Enemy> getSpawnedEnemies() {
         return new ArrayList<>(spawnedEnemies);
     }
@@ -108,11 +115,11 @@ public class EnemySpawner extends Node2D {
         return count;
     }
     
-    public Class<? extends Enemy> getEnemyClass() {
-        return enemyClass;
+    public int getQueue() {
+        return queue;
     }
     
-    public void setEnemyClass(Class<? extends Enemy> enemyClass) {
-        this.enemyClass = enemyClass;
+    public boolean isFinished() {
+        return queue <= 0 && getActiveEnemyCount() == 0;
     }
 }

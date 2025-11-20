@@ -1,5 +1,6 @@
 package flowhou.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -7,30 +8,24 @@ import com.badlogic.gdx.math.Vector2;
 
 
 public class Enemy extends Character{
+	enum TYPE {
+		THRONGLER
+	}
+	protected TYPE type;
+	
     private AIController aiController;
-    private boolean active;
     
-    public Enemy(Vector2 newPosition, Texture newTexture, Stats newStats, float newHurtboxRadius) {
-        super(newPosition, newTexture, newStats, newHurtboxRadius);
-        this.aiController = new AIController(this, null);
-        this.active = true;
-        
-        this.sprite.setOriginCenter();
-        this.sprite.setPosition(sprite.getWidth()/2.0f, sprite.getHeight()/2.0f);
+    public Enemy(Vector2 newPosition, TYPE newType, int newLevel) {
+        super(newPosition, newLevel);
+        setType(newType);
     }
     
     @Override
     public void process(float delta) {
         super.process(delta);
         if (aiController != null && active) {
-        	setMovementInput(aiController.getTargetDirection());
+        	setMovementInput(aiController.getDirection());
         }
-    }
-    
-    @Override
-    public boolean isActive() {
-        return active;
-        
     }
     
     public void takeDamage(int damage) {
@@ -68,6 +63,18 @@ public class Enemy extends Character{
                 }
                 bullet.dispose();
             }
-        }
+        }        
+    }
+    
+    public void setType(TYPE newType) {
+    	this.type = newType;
+    	switch (this.type) {
+    		case THRONGLER:
+    			setTexture(new Texture(Gdx.files.internal("thronglerIdle.png") ) );
+    			getHurtbox().enableCircleCollision(0.5f);
+    			setSpeedMultiplier(0.5f);
+    			setAIController(new AIController(this, FlowhouGame.getGameInstance().getPlayer(), AIController.TYPE.FOLLOW));
+    			break;
+    	}
     }
 }

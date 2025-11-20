@@ -10,12 +10,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player extends Character{
-    
-    public Player(Vector2 newPosition, Texture newSpriteTexture, Stats newStats, float newHurtboxRadius) {
-        super(newPosition, newSpriteTexture, newStats, newHurtboxRadius);
-        this.sprite.setOriginCenter();               
-        this.sprite.setPosition(sprite.getWidth()/2.0f, sprite.getHeight()/2.0f);
+	enum TYPE{
+		AME
+	}
+	private TYPE type;
+	
+    public Player(Vector2 newPosition, TYPE newType , int newLevel) {
+        super(newPosition, newLevel);           
         setupBulletSources();
+        setType(newType);
     }
     
     @Override
@@ -73,5 +76,19 @@ public class Player extends Character{
         return active;
     }
     
+    @Override
+    public void onLevelChanged() {
+    	getStats().setPower(getStats().getPower() + getLevel());
+    }
+    
+    public void setType(TYPE newType) {
+    	this.type = newType;
+    	switch (this.type) {
+    		case AME:
+    			setTexture(new Texture(Gdx.files.internal("ameIdle.png")));
+    			getHurtbox().enableCircleCollision(2.5f);
+    			break;
+    	}
+    }
     
 }
